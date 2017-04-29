@@ -9,10 +9,13 @@ package com.iti.entity;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -32,41 +35,31 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Orders.findAll", query = "SELECT o FROM Orders o")
     , @NamedQuery(name = "Orders.findByDate", query = "SELECT o FROM Orders o WHERE o.date = :date")
     , @NamedQuery(name = "Orders.findByStatus", query = "SELECT o FROM Orders o WHERE o.status = :status")
-    , @NamedQuery(name = "Orders.findById", query = "SELECT o FROM Orders o WHERE o.ordersPK.id = :id")
-    , @NamedQuery(name = "Orders.findByUseremail", query = "SELECT o FROM Orders o WHERE o.ordersPK.useremail = :useremail")})
+    , @NamedQuery(name = "Orders.findById", query = "SELECT o FROM Orders o WHERE o.id = :id")})
 public class Orders implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected OrdersPK ordersPK;
     @Column(name = "date")
     @Temporal(TemporalType.DATE)
     private Date date;
     @Column(name = "status")
     private Integer status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id")
+    private Integer id;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "orders")
     private Collection<Orderdetails> orderdetailsCollection;
-    @JoinColumn(name = "User_email", referencedColumnName = "email", insertable = false, updatable = false)
+    @JoinColumn(name = "User_email", referencedColumnName = "email")
     @ManyToOne(optional = false)
-    private User user;
+    private User useremail;
 
     public Orders() {
     }
 
-    public Orders(OrdersPK ordersPK) {
-        this.ordersPK = ordersPK;
-    }
-
-    public Orders(int id, String useremail) {
-        this.ordersPK = new OrdersPK(id, useremail);
-    }
-
-    public OrdersPK getOrdersPK() {
-        return ordersPK;
-    }
-
-    public void setOrdersPK(OrdersPK ordersPK) {
-        this.ordersPK = ordersPK;
+    public Orders(Integer id) {
+        this.id = id;
     }
 
     public Date getDate() {
@@ -85,6 +78,14 @@ public class Orders implements Serializable {
         this.status = status;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     @XmlTransient
     public Collection<Orderdetails> getOrderdetailsCollection() {
         return orderdetailsCollection;
@@ -94,18 +95,18 @@ public class Orders implements Serializable {
         this.orderdetailsCollection = orderdetailsCollection;
     }
 
-    public User getUser() {
-        return user;
+    public User getUseremail() {
+        return useremail;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUseremail(User useremail) {
+        this.useremail = useremail;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (ordersPK != null ? ordersPK.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
@@ -116,7 +117,7 @@ public class Orders implements Serializable {
             return false;
         }
         Orders other = (Orders) object;
-        if ((this.ordersPK == null && other.ordersPK != null) || (this.ordersPK != null && !this.ordersPK.equals(other.ordersPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -124,7 +125,7 @@ public class Orders implements Serializable {
 
     @Override
     public String toString() {
-        return "com.iti.entity.Orders[ ordersPK=" + ordersPK + " ]";
+        return "com.iti.entity.Orders[ id=" + id + " ]";
     }
 
 }

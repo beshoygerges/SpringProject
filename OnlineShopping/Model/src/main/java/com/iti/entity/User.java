@@ -78,7 +78,7 @@ public class User implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "balance")
     private Double balance;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "useremail")
     private Collection<Orders> ordersCollection;
 
     public User() {

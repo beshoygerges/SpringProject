@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `springshopping`.`orders` (
   `status` INT(11) NULL DEFAULT '0',
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `User_email` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`id`, `User_email`),
+  PRIMARY KEY (`id`),
   INDEX `fk_order_User1_idx` (`User_email` ASC),
   CONSTRAINT `fk_order_User1`
     FOREIGN KEY (`User_email`)

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.iti.dao;
 
 import com.iti.dao.exceptions.IllegalOrphanException;
@@ -20,42 +19,42 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Component(value = "userDao")
+@Transactional
 public class UserJpaController implements Serializable {
-
-    public UserJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public void display(){
+        System.out.println("hhhhhhhhhhhhhhhhh");
     }
-    private EntityManagerFactory emf = null;
 
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
+    @PersistenceContext
+    private EntityManager em;
 
     public void create(User user) throws PreexistingEntityException, Exception {
         if (user.getOrdersCollection() == null) {
             user.setOrdersCollection(new ArrayList<Orders>());
         }
-        EntityManager em = null;
+
         try {
-            em = getEntityManager();
+
             em.getTransaction().begin();
             Collection<Orders> attachedOrdersCollection = new ArrayList<Orders>();
             for (Orders ordersCollectionOrdersToAttach : user.getOrdersCollection()) {
-                ordersCollectionOrdersToAttach = em.getReference(ordersCollectionOrdersToAttach.getClass(), ordersCollectionOrdersToAttach.getOrdersPK());
+                ordersCollectionOrdersToAttach = em.getReference(ordersCollectionOrdersToAttach.getClass(), ordersCollectionOrdersToAttach.getId());
                 attachedOrdersCollection.add(ordersCollectionOrdersToAttach);
             }
             user.setOrdersCollection(attachedOrdersCollection);
             em.persist(user);
             for (Orders ordersCollectionOrders : user.getOrdersCollection()) {
-                User oldUserOfOrdersCollectionOrders = ordersCollectionOrders.getUser();
-                ordersCollectionOrders.setUser(user);
+                User oldUseremailOfOrdersCollectionOrders = ordersCollectionOrders.getUseremail();
+                ordersCollectionOrders.setUseremail(user);
                 ordersCollectionOrders = em.merge(ordersCollectionOrders);
-                if (oldUserOfOrdersCollectionOrders != null) {
-                    oldUserOfOrdersCollectionOrders.getOrdersCollection().remove(ordersCollectionOrders);
-                    oldUserOfOrdersCollectionOrders = em.merge(oldUserOfOrdersCollectionOrders);
+                if (oldUseremailOfOrdersCollectionOrders != null) {
+                    oldUseremailOfOrdersCollectionOrders.getOrdersCollection().remove(ordersCollectionOrders);
+                    oldUseremailOfOrdersCollectionOrders = em.merge(oldUseremailOfOrdersCollectionOrders);
                 }
             }
             em.getTransaction().commit();
@@ -72,9 +71,8 @@ public class UserJpaController implements Serializable {
     }
 
     public void edit(User user) throws IllegalOrphanException, NonexistentEntityException, Exception {
-        EntityManager em = null;
+       
         try {
-            em = getEntityManager();
             em.getTransaction().begin();
             User persistentUser = em.find(User.class, user.getEmail());
             Collection<Orders> ordersCollectionOld = persistentUser.getOrdersCollection();
@@ -85,7 +83,7 @@ public class UserJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Orders " + ordersCollectionOldOrders + " since its user field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Orders " + ordersCollectionOldOrders + " since its useremail field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -93,7 +91,7 @@ public class UserJpaController implements Serializable {
             }
             Collection<Orders> attachedOrdersCollectionNew = new ArrayList<Orders>();
             for (Orders ordersCollectionNewOrdersToAttach : ordersCollectionNew) {
-                ordersCollectionNewOrdersToAttach = em.getReference(ordersCollectionNewOrdersToAttach.getClass(), ordersCollectionNewOrdersToAttach.getOrdersPK());
+                ordersCollectionNewOrdersToAttach = em.getReference(ordersCollectionNewOrdersToAttach.getClass(), ordersCollectionNewOrdersToAttach.getId());
                 attachedOrdersCollectionNew.add(ordersCollectionNewOrdersToAttach);
             }
             ordersCollectionNew = attachedOrdersCollectionNew;
@@ -101,12 +99,12 @@ public class UserJpaController implements Serializable {
             user = em.merge(user);
             for (Orders ordersCollectionNewOrders : ordersCollectionNew) {
                 if (!ordersCollectionOld.contains(ordersCollectionNewOrders)) {
-                    User oldUserOfOrdersCollectionNewOrders = ordersCollectionNewOrders.getUser();
-                    ordersCollectionNewOrders.setUser(user);
+                    User oldUseremailOfOrdersCollectionNewOrders = ordersCollectionNewOrders.getUseremail();
+                    ordersCollectionNewOrders.setUseremail(user);
                     ordersCollectionNewOrders = em.merge(ordersCollectionNewOrders);
-                    if (oldUserOfOrdersCollectionNewOrders != null && !oldUserOfOrdersCollectionNewOrders.equals(user)) {
-                        oldUserOfOrdersCollectionNewOrders.getOrdersCollection().remove(ordersCollectionNewOrders);
-                        oldUserOfOrdersCollectionNewOrders = em.merge(oldUserOfOrdersCollectionNewOrders);
+                    if (oldUseremailOfOrdersCollectionNewOrders != null && !oldUseremailOfOrdersCollectionNewOrders.equals(user)) {
+                        oldUseremailOfOrdersCollectionNewOrders.getOrdersCollection().remove(ordersCollectionNewOrders);
+                        oldUseremailOfOrdersCollectionNewOrders = em.merge(oldUseremailOfOrdersCollectionNewOrders);
                     }
                 }
             }
@@ -128,9 +126,7 @@ public class UserJpaController implements Serializable {
     }
 
     public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
-        EntityManager em = null;
         try {
-            em = getEntityManager();
             em.getTransaction().begin();
             User user;
             try {
@@ -145,7 +141,7 @@ public class UserJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Orders " + ordersCollectionOrphanCheckOrders + " in its ordersCollection field has a non-nullable user field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Orders " + ordersCollectionOrphanCheckOrders + " in its ordersCollection field has a non-nullable useremail field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
@@ -168,7 +164,6 @@ public class UserJpaController implements Serializable {
     }
 
     private List<User> findUserEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(User.class));
@@ -184,7 +179,6 @@ public class UserJpaController implements Serializable {
     }
 
     public User findUser(String id) {
-        EntityManager em = getEntityManager();
         try {
             return em.find(User.class, id);
         } finally {
@@ -193,7 +187,6 @@ public class UserJpaController implements Serializable {
     }
 
     public int getUserCount() {
-        EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<User> rt = cq.from(User.class);
@@ -203,6 +196,14 @@ public class UserJpaController implements Serializable {
         } finally {
             em.close();
         }
+    }
+
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
 }

@@ -38,14 +38,14 @@ public class OrderdetailsJpaController implements Serializable {
             orderdetails.setOrderdetailsPK(new OrderdetailsPK());
         }
         orderdetails.getOrderdetailsPK().setProductsProductId(orderdetails.getProducts().getProductId());
-        orderdetails.getOrderdetailsPK().setOrderId(orderdetails.getOrders().getOrdersPK().getId());
+        orderdetails.getOrderdetailsPK().setOrderId(orderdetails.getOrders().getId());
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Orders orders = orderdetails.getOrders();
             if (orders != null) {
-                orders = em.getReference(orders.getClass(), orders.getOrdersPK());
+                orders = em.getReference(orders.getClass(), orders.getId());
                 orderdetails.setOrders(orders);
             }
             Products products = orderdetails.getProducts();
@@ -77,7 +77,7 @@ public class OrderdetailsJpaController implements Serializable {
 
     public void edit(Orderdetails orderdetails) throws NonexistentEntityException, Exception {
         orderdetails.getOrderdetailsPK().setProductsProductId(orderdetails.getProducts().getProductId());
-        orderdetails.getOrderdetailsPK().setOrderId(orderdetails.getOrders().getOrdersPK().getId());
+        orderdetails.getOrderdetailsPK().setOrderId(orderdetails.getOrders().getId());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -88,7 +88,7 @@ public class OrderdetailsJpaController implements Serializable {
             Products productsOld = persistentOrderdetails.getProducts();
             Products productsNew = orderdetails.getProducts();
             if (ordersNew != null) {
-                ordersNew = em.getReference(ordersNew.getClass(), ordersNew.getOrdersPK());
+                ordersNew = em.getReference(ordersNew.getClass(), ordersNew.getId());
                 orderdetails.setOrders(ordersNew);
             }
             if (productsNew != null) {
