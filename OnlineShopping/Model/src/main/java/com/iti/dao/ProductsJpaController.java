@@ -3,35 +3,88 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.iti.dao;
 
-import com.iti.dao.exceptions.IllegalOrphanException;
-import com.iti.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import com.iti.entity.Orderdetails;
 import com.iti.entity.Products;
+import com.iti.productInterface.ProductInteface;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
+public class ProductsJpaController implements Serializable, ProductInteface {
 
-public class ProductsJpaController implements Serializable {
+    @PersistenceContext
+    private EntityManager emf;
 
-    public ProductsJpaController(EntityManagerFactory emf) {
+    @Override
+    public boolean addProduct(Products productObj) {
+        // Products product = new Products(12, "112", 0, 0, "imageUrl", "description", "categoryName");
+        emf.persist(productObj);
+        return false;
+    }
+
+    @Override
+    public ArrayList<Products> findProductByCategory(Products productObj) {
+        return (ArrayList<Products>) emf.createNamedQuery("Products.findByCategoryName").setParameter("categoryName", productObj.getCategoryName()).getResultList();
+
+    }
+
+    @Override
+    public ArrayList<Products> findProductById(int productId) {
+        return (ArrayList<Products>) emf.createNamedQuery("Products.findByProductId").setParameter("productId", productId).getResultList();
+    }
+
+    @Override
+    public ArrayList<Products> getAllProduct() {
+        ArrayList<Products> productList = (ArrayList<Products>) emf.createNamedQuery("Products.findAll").getResultList();
+        return productList;
+    }
+
+    @Override
+    public boolean removeProduct(Products productObj) {
+        ArrayList<Products> p = (ArrayList<Products>) emf.createNamedQuery("Products.findByProductId").setParameter("productId", productObj.getProductId()).getResultList();
+        if (p.get(0) != null) {
+            emf.remove(p.get(0));
+            return true;
+        } else {
+            System.out.println("product not fonund");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateProduct(Products productObj) {
+        ArrayList<Products> l = (ArrayList<Products>) emf.createNamedQuery("Products.findByProductId").setParameter("productId", productObj.getProductId()).getResultList();
+        if (l.get(0) != null) {
+            l.get(0).setImageUrl(productObj.getImageUrl());
+            l.get(0).setDescription(productObj.getDescription());
+            l.get(0).setDiscount(productObj.getDiscount());
+            l.get(0).setPrice(productObj.getPrice());
+            l.get(0).setQuantity(productObj.getQuantity());
+            emf.merge(l.get(0));
+            return true;
+        } else {
+            System.out.println("product not fonund");
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean findProductByProductName(Products productObj) {
+        ArrayList<Products> pList = (ArrayList<Products>) emf.createNamedQuery("Products.findByProductName").setParameter("productName", productObj.getProductName()).getResultList();
+        if (pList.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+    /*   public ProductsJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
+    
 
     public void create(Products products) {
         if (products.getOrderdetailsCollection() == null) {
@@ -198,5 +251,6 @@ public class ProductsJpaController implements Serializable {
             em.close();
         }
     }
+     */
 
 }

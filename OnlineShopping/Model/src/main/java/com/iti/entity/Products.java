@@ -12,6 +12,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -65,7 +66,7 @@ public class Products implements Serializable {
     @Basic(optional = false)
     @Column(name = "categoryName")
     private String categoryName;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "products")
+    @OneToMany(fetch = FetchType.EAGER ,cascade = CascadeType.MERGE, mappedBy = "products")
     private Collection<Orderdetails> orderdetailsCollection;
 
     public Products() {
@@ -76,7 +77,15 @@ public class Products implements Serializable {
     }
 
     public Products(Integer productId, String productName, double price, int quantity, String imageUrl, String description, String categoryName) {
-        this.productId = productId;
+       this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.categoryName = categoryName;
+    }
+ public Products( String productName, double price, int quantity, String imageUrl, String description, String categoryName) {
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
@@ -180,7 +189,9 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        return "com.iti.entity.Products[ productId=" + productId + " ]";
+        return "Products{" + "productId=" + productId + ", productName=" + productName + ", price=" + price + ", quantity=" + quantity + ", imageUrl=" + imageUrl + ", description=" + description + ", discount=" + discount + ", categoryName=" + categoryName + ", orderdetailsCollection=" + orderdetailsCollection + '}';
     }
+
+    
 
 }

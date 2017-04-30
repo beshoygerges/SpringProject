@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -40,10 +41,10 @@ public class Orderdetails implements Serializable {
     @Column(name = "quantity")
     private int quantity;
     @JoinColumn(name = "order_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER , optional = false)
     private Orders orders;
     @JoinColumn(name = "products_product_id", referencedColumnName = "product_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER ,optional = false)
     private Products products;
 
     public Orderdetails() {
