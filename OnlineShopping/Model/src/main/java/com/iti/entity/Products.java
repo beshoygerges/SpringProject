@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.iti.entity;
 
 import java.io.Serializable;
@@ -12,7 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,10 +18,15 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-
+/**
+ *
+ * @author Sama
+ */
 @Entity
 @Table(name = "products")
 @XmlRootElement
@@ -46,27 +49,37 @@ public class Products implements Serializable {
     @Column(name = "product_id")
     private Integer productId;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "productName")
     private String productName;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "price")
     private double price;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "quantity")
     private int quantity;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 1024)
     @Column(name = "imageUrl")
     private String imageUrl;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 500)
     @Column(name = "description")
     private String description;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "discount")
     private Double discount;
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 45)
     @Column(name = "categoryName")
     private String categoryName;
-    @OneToMany(fetch = FetchType.EAGER ,cascade = CascadeType.MERGE, mappedBy = "products")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "products")
     private Collection<Orderdetails> orderdetailsCollection;
 
     public Products() {
@@ -77,15 +90,7 @@ public class Products implements Serializable {
     }
 
     public Products(Integer productId, String productName, double price, int quantity, String imageUrl, String description, String categoryName) {
-       this.productId = productId;
-        this.productName = productName;
-        this.price = price;
-        this.quantity = quantity;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.categoryName = categoryName;
-    }
- public Products( String productName, double price, int quantity, String imageUrl, String description, String categoryName) {
+        this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
@@ -189,9 +194,7 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        return "Products{" + "productId=" + productId + ", productName=" + productName + ", price=" + price + ", quantity=" + quantity + ", imageUrl=" + imageUrl + ", description=" + description + ", discount=" + discount + ", categoryName=" + categoryName + ", orderdetailsCollection=" + orderdetailsCollection + '}';
+        return "dataModel.Products[ productId=" + productId + " ]";
     }
-
     
-
 }

@@ -3,22 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.iti.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
-
+/**
+ *
+ * @author Sama
+ */
 @Embeddable
 public class OrderdetailsPK implements Serializable {
 
     @Basic(optional = false)
+    @NotNull
     @Column(name = "products_product_id")
     private int productsProductId;
     @Basic(optional = false)
+    @NotNull
     @Column(name = "order_id")
     private int orderId;
 
@@ -72,7 +77,7 @@ public class OrderdetailsPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.iti.entity.OrderdetailsPK[ productsProductId=" + productsProductId + ", orderId=" + orderId + " ]";
+        return "dataModel.OrderdetailsPK[ productsProductId=" + productsProductId + ", orderId=" + orderId + " ]";
     }
-
+    
 }

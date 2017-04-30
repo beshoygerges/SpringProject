@@ -33,11 +33,11 @@ public class Test {
 //        System.out.println(" add function "+proService.addProduct(new Products("new PRODUCT", 12, 14, "imageUrl", "description", "categoryName")));
       //  System.out.println("find product by id"+proService.findProductById(9).toString());     
       Products p=new Products();
-      Products pObj = new Products(7, "productName1", 10, 10, "imageUrl1", "fghjh", "categoryName1");
+      Products pObj = new Products(3, "productName1", 10, 10, "imageUrl1", "fghjh", "categoryName1");
              
 // p.setCategoryName("categoryName1");
     //    System.out.println("product list by id is "+proService.getProducsByCategoryName(p).size()); 
-        System.out.println(""+proService.updateProduct(pObj)); 
+       System.out.println(""+proService.removeProduct(pObj)); 
     System.out.println("==========end=============");
 
     }

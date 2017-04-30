@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package service;
 
 import com.iti.entity.Products;
@@ -48,10 +44,6 @@ public class ProductService {
         }
         return false;
     }
-
-    /*get product findById
-    edite product
-    call update product method*/
     public boolean updateProduct(Products productObj) {
         return controller.updateProduct(productObj);
     }

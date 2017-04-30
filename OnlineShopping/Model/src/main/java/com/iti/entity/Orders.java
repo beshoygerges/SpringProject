@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.iti.entity;
 
 import java.io.Serializable;
@@ -27,7 +26,10 @@ import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-
+/**
+ *
+ * @author Sama
+ */
 @Entity
 @Table(name = "orders")
 @XmlRootElement
@@ -125,7 +127,7 @@ public class Orders implements Serializable {
 
     @Override
     public String toString() {
-        return "com.iti.entity.Orders[ id=" + id + " ]";
+        return "dataModel.Orders[ id=" + id + " ]";
     }
-
+    
 }
